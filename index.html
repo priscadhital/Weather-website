@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atmosphere · Live Weather</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-scene="default">
+    <div class="ambient" aria-hidden="true"></div>
+    <div class="weather-scene" id="weather-scene" aria-hidden="true">
+      <div class="scene-sun" id="scene-sun"></div>
+      <div class="scene-stars" id="scene-stars"></div>
+      <div class="scene-clouds" id="scene-clouds">
+        <span class="cloud cloud-a"></span>
+        <span class="cloud cloud-b"></span>
+        <span class="cloud cloud-c"></span>
+      </div>
+      <div class="scene-fog" id="scene-fog"></div>
+      <div class="scene-rain" id="scene-rain"></div>
+      <div class="scene-snow" id="scene-snow"></div>
+      <div class="scene-lightning" id="scene-lightning"></div>
+    </div>
+
+    <header class="header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Atmosphere</span>
+        <span class="live-pill" id="live-pill" hidden>
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-label">Live</span>
+          <span class="live-clock" id="live-clock"></span>
+        </span>
+      </div>
+      <p class="tagline">Real-time conditions anywhere on Earth</p>
+    </header>
+
+    <main class="main">
+      <section class="search-panel" aria-label="Location search">
+        <form class="search-form" id="search-form" autocomplete="off">
+          <label class="sr-only" for="location-input">City, region, or country</label>
+          <div class="input-combo">
+            <div class="input-wrap">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <input
+                type="search"
+                id="location-input"
+                name="q"
+                placeholder="Type a city (e.g. Austin, Tokyo)…"
+                maxlength="120"
+                spellcheck="false"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="suggestions"
+                aria-autocomplete="list"
+              />
+            </div>
+            <ul
+              class="suggestions"
+              id="suggestions"
+              role="listbox"
+              aria-label="Matching places"
+              hidden
+            ></ul>
+          </div>
+          <button type="button" class="btn-city" id="btn-city" title="Pick a city">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"
+                fill="currentColor"
+              />
+            </svg>
+            <span class="btn-city-label">City</span>
+          </button>
+          <button type="submit" class="btn-search" id="btn-search">
+            <span class="btn-label">Search</span>
+            <span class="btn-spinner" hidden aria-hidden="true"></span>
+          </button>
+        </form>
+        <p class="hint">Search by city, state or province, or country. We match places worldwide.</p>
+      </section>
+
+      <section class="weather-section" id="weather-section" hidden>
+        <article class="weather-card" id="weather-card">
+          <div class="weather-card-bg" id="weather-card-bg" aria-hidden="true"></div>
+          <div class="weather-primary">
+            <div class="location-block">
+              <h1 class="place-name" id="place-name">…</h1>
+              <p class="place-meta" id="place-meta"></p>
+              <p class="updated" id="updated"></p>
+            </div>
+            <div class="hero-weather">
+              <div class="condition-icon-wrap" id="condition-icon-wrap">
+                <span class="condition-icon" id="condition-icon" aria-hidden="true"></span>
+              </div>
+              <div class="temp-block">
+                <span class="temperature" id="temperature">…</span>
+                <span class="unit" id="unit">°C</span>
+              </div>
+              <p class="condition-text" id="condition-text">…</p>
+            </div>
+          </div>
+
+          <ul class="stats" id="stats">
+            <li class="stat" data-stat>
+              <span class="stat-label">Feels like</span>
+              <span class="stat-value" id="feels-like">…</span>
+            </li>
+            <li class="stat" data-stat>
+              <span class="stat-label">Humidity</span>
+              <span class="stat-value" id="humidity">…</span>
+            </li>
+            <li class="stat" data-stat>
+              <span class="stat-label">Wind</span>
+              <span class="stat-value" id="wind">…</span>
+            </li>
+          </ul>
+
+          <div class="unit-toggle">
+            <button type="button" class="unit-btn active" id="unit-c" data-unit="c" aria-pressed="true">°C</button>
+            <button type="button" class="unit-btn" id="unit-f" data-unit="f" aria-pressed="false">°F</button>
+          </div>
+        </article>
+      </section>
+
+      <div class="message message--error" id="error-msg" role="alert" hidden></div>
+      <div class="message message--empty" id="empty-state">
+        <p>Enter a place above to see live temperature, humidity, wind, and conditions.</p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Weather by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
